@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">ComercialFlores</string>
+    <string name="nombre_tienda">Comercial Flores</string>
+    <string name="title_activity_sobre_nosotros">SobreNosotrosActivity</string>
+    <string name="about_us">En Comercial flores, creemos que tu hogar debe ser un refugio de paz y estilo.
+        Seleccionamos piezas que combinan funcionalidad, estética limpia y durabilidad para transformar cada
+        ambiente. Desde utensilios de cocina esenciales hasta detalles decorativos contemporáneos, te ayudamos
+        a crear un espacio organizado, acogedor y lleno de personalidad.</string>
+    <string name="title_activity_terminos">TerminosActivity</string>
+    <string name="title_activity_menu">menu</string>
+
+
+    <string name="dashboard_welcome_kicker">BIENVENIDO</string>
+    <string name="dashboard_subtitulo">Lo que tu hogar necesita</string>
+    <string name="dashboard_titulo">Todo lo que ofrecemos</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_detalle_producto">DetalleProducto</string>
+
+</resources>
+
