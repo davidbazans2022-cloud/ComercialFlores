@@ -39,11 +39,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,9 +52,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.comercialflores.R
 import com.example.comercialflores.data.model.Producto
-import com.example.comercialflores.data.remote.RetrofitClient
 import com.example.comercialflores.ui.components.BottomNavBar
 import com.example.comercialflores.ui.screens.categorias.CategoriasScreen
 import com.example.comercialflores.ui.screens.detalleProducto.DetalleProducto
@@ -68,14 +63,7 @@ import com.example.comercialflores.ui.theme.ComercialFloresTheme
 import kotlin.jvm.java
 
 
-sealed interface AppRoute {
-    data object Inicio : AppRoute
-    data object Provedores : AppRoute
-    data object Empleados : AppRoute
-    data object expensive : AppRoute
-    data object cheaper : AppRoute
-    data object masAsi : AppRoute
-}
+
 
 class Menu : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,8 +72,8 @@ class Menu : ComponentActivity() {
         setContent {
 
             ComercialFloresTheme {
-                Scaffold(bottomBar = { BottomNavBar(selectedIndex = 0) } ) { innerPadding ->
-                pantallaMenu(modifier = Modifier.padding(innerPadding))
+                Scaffold(bottomBar = { BottomNavBar(selectedIndex = 1) } ) { innerPadding ->
+                PantallaMenu(modifier = Modifier.padding(innerPadding))
 
             }
             }
@@ -95,23 +83,7 @@ class Menu : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun pantallaMenu(modifier: Modifier) {
-    // ESTADOS PARA GESTIONAR LOS PRODUCTOS DE LA BD
-    var listaProductos by remember { mutableStateOf<List<Producto>>(emptyList()) }
-    var estaCargando by remember { mutableStateOf(true) }
-    var errorConexion by remember { mutableStateOf<String?>(null) }
-
-    // cargas
-    LaunchedEffect(Unit) {
-        try {
-            val respuesta = RetrofitClient.productosService.getProductos()
-            listaProductos = respuesta.data
-        } catch (e: Exception) {
-            errorConexion = "Error de conexión con el servidor: ${e.localizedMessage}"
-        } finally {
-            estaCargando = false
-        }
-    }
+fun PantallaMenu(modifier: Modifier, viewModel: MenuViewModel = viewModel()) {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -172,7 +144,7 @@ fun pantallaMenu(modifier: Modifier) {
 
 
             when {
-                estaCargando -> {
+                viewModel.estaCargando -> {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
@@ -185,7 +157,7 @@ fun pantallaMenu(modifier: Modifier) {
                     }
                 }
 
-                errorConexion != null -> {
+                viewModel.errorConexion != null -> {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
@@ -203,7 +175,7 @@ fun pantallaMenu(modifier: Modifier) {
                                 modifier = Modifier.size(40.dp)
                             )
                             Text(
-                                text = errorConexion!!,
+                                text = viewModel.errorConexion ?: "",
                                 color = MaterialTheme.colorScheme.error,
                                 style = MaterialTheme.typography.bodyMedium,
                                 textAlign = TextAlign.Center
@@ -224,12 +196,12 @@ fun pantallaMenu(modifier: Modifier) {
                         contentPadding = PaddingValues(bottom = AppTheme.spacing.regular)
                     ) {
                         items(
-                            items = listaProductos,
+                            items = viewModel.listaProductos,
                             key = { it.id } // Clave única según la llave primaria de la BD
                         ) { producto ->
-                            TarjetaProductoBD(producto = producto, onClick = {
-                                // Acción al seleccionar un producto
-                            })
+                            TarjetaProductoBD(producto = producto
+
+                            )
                         }
                     }
                 }
@@ -241,8 +213,8 @@ fun pantallaMenu(modifier: Modifier) {
 
 @Composable
 fun TarjetaProductoBD(
-    producto: Producto,
-    onClick: () -> Unit
+    producto: Producto
+
 ) {
     val context = LocalContext.current
     ElevatedCard(
@@ -262,17 +234,8 @@ fun TarjetaProductoBD(
             contentColor = MaterialTheme.colorScheme.onSurface
         ),
         elevation = CardDefaults.elevatedCardElevation(
-            defaultElevation = AppTheme.sizes.cardElevation
-        )
-
-
-
-    )
-
-
-
-
-    {
+            defaultElevation = AppTheme.sizes.cardElevation)
+    )  {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -280,11 +243,6 @@ fun TarjetaProductoBD(
 
             verticalArrangement = Arrangement.spacedBy(AppTheme.spacing.small)
         ) {
-
-
-
-
-
 
             Text(
                 text = producto.nombre,
