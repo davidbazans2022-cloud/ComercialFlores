@@ -21,7 +21,7 @@ class TerminosActivity : ComponentActivity() {
         setContent {
             ComercialFloresTheme {
                 Scaffold(modifier = Modifier.fillMaxSize(),
-                    bottomBar = { BottomNavBar(selectedIndex = 1) } ) { innerPadding ->
+                    bottomBar = { BottomNavBar(selectedIndex = 3) } ) { innerPadding ->
                     Greeting(
                         name = "Android",
                         modifier = Modifier.padding(innerPadding)

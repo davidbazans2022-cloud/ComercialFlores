@@ -30,72 +30,95 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.comercialflores.R
+import com.example.comercialflores.ui.components.BottomNavBar
 import com.example.comercialflores.ui.theme.ComercialFloresTheme
 import kotlin.jvm.java
 
 
+
+
 class SobreNosotrosActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
+
         setContent {
+
             ComercialFloresTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+
+                Scaffold(modifier = Modifier.fillMaxSize(),
+
+                    bottomBar = { BottomNavBar(selectedIndex = 2) }) { innerPadding ->
+
                     PantallaSobreNosotros(
-                        modifier = Modifier.padding(innerPadding),
-                        onVolverClick = { finish() },
-                        onMenu = {
-                            startActivity(Intent(this, Menu::class.java))
-                        }
+
+                        modifier = Modifier.padding(innerPadding)
                     )
+
                 }
+
             }
+
         }
+
     }
+
 }
+
+
 
 @Composable
 fun PantallaSobreNosotros(
     modifier: Modifier = Modifier,
-    onVolverClick: () -> Unit,
-    onMenu: () -> Unit
-) {
-    Box(modifier = Modifier.fillMaxSize()) {
 
-        // Imagen a pantalla completa, de fondo
+) {
+    Box(modifier = modifier.fillMaxSize()) {
+
+        // 1. Imagen de fondo a pantalla completa
         Image(
             painter = painterResource(R.drawable.img_1),
-            contentDescription = "Logo de la empresa",
+            contentDescription = "Fondo de la empresa",
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
-
         )
 
-        // Degradado oscuro solo en la mitad inferior
+        // 2. Degradado oscuro dinámico para contraste del texto
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(
                     Brush.verticalGradient(
-                        colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.85f)),
-                        startY = 400f
+                        colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.9f)),
+                        startY = 300f
                     )
                 )
         )
 
-        // Marca pequeña arriba a la izquierda
+        // 3. icono de tienda
         Row(
             modifier = Modifier
                 .align(Alignment.TopStart)
@@ -117,13 +140,14 @@ fun PantallaSobreNosotros(
             )
         }
 
-        // Bloque inferior: título, descripción y botones
+        // 4. Bloque inferior principal (Contenido)
         Column(
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp, vertical = 32.dp)
+                .padding(horizontal = 24.dp, vertical = 28.dp)
         ) {
+            // Título principal con peso visual limpio
             Text(
                 text = "Conoce Nuestra Historia",
                 style = MaterialTheme.typography.headlineMedium,
@@ -131,52 +155,21 @@ fun PantallaSobreNosotros(
                 color = Color.White
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
+            // Descripción con mejor legibilidad (añadimos lineHeight)
             Text(
                 text = stringResource(R.string.about_us),
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.White.copy(alpha = 0.8f),
-
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    lineHeight = 20.sp
+                ),
+                color = Color.White.copy(alpha = 0.85f)
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(28.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                OutlinedButton(
-                    onClick = onVolverClick,
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(52.dp),
-                    shape = RoundedCornerShape(26.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
-                    border = BorderStroke(1.dp, Color.White.copy(alpha = 0.6f))
-                ) {
-                    Text("Volver")
-                }
 
-                Button(
-                    onClick = onMenu,
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(52.dp),
-                    shape = RoundedCornerShape(26.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    )
-                ) {
-                    Text("Menú")
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Icon(
-                        imageVector = Icons.Default.ArrowForward,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
-                    )
-                }
-            }
+
         }
     }
 }
