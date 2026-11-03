@@ -55,10 +55,6 @@ class MainActivity : ComponentActivity() {
                         onEmpezarClick = {
                             val intent = Intent(this@MainActivity, HomeActivity::class.java)
                             startActivity(intent)
-                        },
-                        onTerminosClick = {
-                            val intent = Intent(this@MainActivity, TerminosActivity::class.java)
-                            startActivity(intent)
                         }
                     )
                 }
@@ -70,8 +66,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun PantallaPrincipal(modifier: Modifier,
-                      onEmpezarClick: () -> Unit,
-                      onTerminosClick : ()-> Unit){
+                      onEmpezarClick: () -> Unit) {
 
     Column(modifier = modifier
         .fillMaxSize()
@@ -119,10 +114,7 @@ fun PantallaPrincipal(modifier: Modifier,
 
 
 
-        TextButton(onClick = onTerminosClick) {
-            Text("Términos y Condiciones",
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f))
-        }
+
 
         Spacer(modifier = Modifier.height(24.dp))
 

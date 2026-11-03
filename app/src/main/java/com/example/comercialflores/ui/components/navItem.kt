@@ -23,7 +23,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.comercialflores.MainActivity
+import com.example.comercialflores.ui.screens.home.HomeActivity
 import com.example.comercialflores.ui.screens.menu.Menu
 import com.example.comercialflores.ui.screens.sobrenosotros.SobreNosotrosActivity
 import com.example.comercialflores.ui.screens.terminos.TerminosActivity
@@ -36,42 +38,33 @@ fun BottomNavBar(selectedIndex: Int) {
     val context = LocalContext.current
 
     val items = listOf(
-        NavItem("Categorías", Icons.Default.Menu, Menu::class.java),
+        NavItem("Inicio", Icons.Default.Home, HomeActivity::class.java),
+        NavItem("Catálogo", Icons.Default.Menu, Menu::class.java),
         NavItem("Nosotros", Icons.Default.Info, SobreNosotrosActivity::class.java),
         NavItem("Términos", Icons.Default.Description, TerminosActivity::class.java)
     )
 
-    Surface(
-        modifier = Modifier
-            .navigationBarsPadding()
-            .padding(horizontal = 24.dp, vertical = 12.dp),
-        shape = RoundedCornerShape(28.dp),
-        color = Color.Black.copy(alpha = 0.85f),
-        tonalElevation = 8.dp
+    NavigationBar(
+        containerColor = MaterialTheme.colorScheme.primary
     ) {
-        NavigationBar(
-            containerColor = Color.Transparent,
-            windowInsets = WindowInsets(0.dp)
-        ) {
-            items.forEachIndexed { index, item ->
-                NavigationBarItem(
-                    selected = index == selectedIndex,
-                    onClick = {
-                        if (index != selectedIndex) {
-                            context.startActivity(Intent(context, item.destino))
-                        }
-                    },
-                    icon = { Icon(item.icon, contentDescription = item.label) },
-                    label = { Text(item.label) },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = Color.White,
-                        selectedTextColor = Color.White,
-                        indicatorColor = MaterialTheme.colorScheme.primary,
-                        unselectedIconColor = Color.White.copy(alpha = 0.6f),
-                        unselectedTextColor = Color.White.copy(alpha = 0.6f)
-                    )
+        items.forEachIndexed { index, item ->
+            NavigationBarItem(
+                selected = index == selectedIndex,
+                onClick = {
+                    if (index != selectedIndex) {
+                        context.startActivity(Intent(context, item.destino))
+                    }
+                },
+                icon = { Icon(item.icon, contentDescription = item.label) },
+                label = { Text(item.label, fontSize = 11.sp) },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                    selectedTextColor = MaterialTheme.colorScheme.onPrimary,
+                    indicatorColor = MaterialTheme.colorScheme.onPrimary,
+                    unselectedIconColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f),
+                    unselectedTextColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f)
                 )
-            }
+            )
         }
     }
 }
